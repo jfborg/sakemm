@@ -64,7 +64,7 @@ schema_paths = []
 
 [db.seed]
 # If enabled, seeds the database after migrations during a db reset.
-enabled = true
+enabled = false
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
 sql_paths = ["./seed.sql"]
@@ -174,7 +174,7 @@ refresh_token_reuse_interval = 10
 # Allow/disallow new user signups to your project.
 enable_signup = true
 # Allow/disallow anonymous sign-ins to your project.
-enable_anonymous_sign_ins = false
+enable_anonymous_sign_ins = true
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
@@ -380,6 +380,33 @@ policy = "per_worker"
 inspector_port = 8083
 # The Deno major version to use.
 deno_version = 2
+
+[functions.seal]
+verify_jwt = true
+
+[functions.claim]
+verify_jwt = true
+
+[functions.open]
+verify_jwt = true
+
+[functions.burn]
+verify_jwt = true
+
+[functions.reply]
+verify_jwt = true
+
+[functions.link-page]
+verify_jwt = false
+
+[functions.og-image]
+verify_jwt = false
+
+[functions.dispatch-notifications]
+verify_jwt = false
+
+[remotes.main]
+project_id = "lxxczysiapnarwysjsie"
 
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
