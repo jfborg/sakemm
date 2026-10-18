@@ -382,19 +382,19 @@ inspector_port = 8083
 deno_version = 2
 
 [functions.seal]
-verify_jwt = true
+verify_jwt = false
 
 [functions.claim]
-verify_jwt = true
+verify_jwt = false
 
 [functions.open]
-verify_jwt = true
+verify_jwt = false
 
 [functions.burn]
-verify_jwt = true
+verify_jwt = false
 
 [functions.reply]
-verify_jwt = true
+verify_jwt = false
 
 [functions.link-page]
 verify_jwt = false
