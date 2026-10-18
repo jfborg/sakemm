@@ -5,6 +5,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { listMyLetters, type LetterRow } from '../lib/api';
 import { getStationery } from '../constants/stationery';
+import { webContainer } from '../constants/layout';
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function ShelfScreen() {
@@ -29,7 +30,8 @@ export default function ShelfScreen() {
   const received = (data ?? []).filter((l) => l.recipient_id === userId);
 
   return (
-    <View style={[styles.container, { backgroundColor: stationery.paperColor }]}>
+    <View style={[styles.outer, { backgroundColor: stationery.paperColor }]}>
+    <View style={[styles.container, webContainer]}>
       <Text style={[styles.title, { color: stationery.textColor }]}>Your shelf</Text>
 
       {!userId && authStatus !== 'error' && (
@@ -57,6 +59,7 @@ export default function ShelfScreen() {
         contentContainerStyle={styles.list}
         renderItem={({ item }) => <ShelfItem letter={item} stationery={stationery} onPress={() => router.push(`/open/${item.id}`)} />}
       />
+    </View>
     </View>
   );
 }
@@ -106,6 +109,9 @@ function formatCountdown(msRemaining: number): string {
 }
 
 const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,

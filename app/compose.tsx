@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { getStationery } from '../constants/stationery';
+import { webContainer } from '../constants/layout';
 import { useComposeStore } from '../store/useComposeStore';
 
 type QuickPick = { label: string; computeIso: () => string };
@@ -73,8 +74,10 @@ export default function ComposeScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={[styles.container, { backgroundColor: stationery.paperColor }]}
+      style={{ backgroundColor: stationery.paperColor }}
+      contentContainerStyle={styles.scrollContent}
     >
+    <View style={[styles.container, webContainer]}>
       <Text style={[styles.title, { color: stationery.textColor }]}>
         {replyToSenderDisplayName ? `Write back to ${replyToSenderDisplayName}` : 'Write a letter'}
       </Text>
@@ -186,6 +189,7 @@ export default function ComposeScreen() {
       >
         Continue to seal
       </Text>
+    </View>
     </ScrollView>
   );
 }
@@ -222,6 +226,10 @@ function NumberField({
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
   container: {
     padding: 20,
     gap: 16,

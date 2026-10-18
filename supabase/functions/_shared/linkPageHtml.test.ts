@@ -6,6 +6,7 @@ const baseInput = {
   unlockAtIso: '2026-09-22T10:40:31.617Z',
   unlockAtLabel: 'Tue, Sep 22, 10:40 AM',
   ogImageUrl: 'https://example.test/functions/v1/og-image/abcDEF123456789012_-xyz',
+  continueInBrowserUrl: 'https://app.example.test/l/abcDEF123456789012_-xyz',
 };
 
 describe('buildFoundLinkPageHtml', () => {
@@ -20,6 +21,11 @@ describe('buildFoundLinkPageHtml', () => {
     const html = buildFoundLinkPageHtml(baseInput);
     expect(html).toContain('From Alex');
     expect(html).toContain('>abcDEF123456789012_-xyz<');
+  });
+
+  it('links "Continue in browser" to the webapp\'s own route for this letter', () => {
+    const html = buildFoundLinkPageHtml(baseInput);
+    expect(html).toContain(`<a class="continue-button" href="${baseInput.continueInBrowserUrl}">Continue in browser</a>`);
   });
 
   it('never mentions a "time capsule" and has no em dashes (guardrails apply to generated copy too)', () => {

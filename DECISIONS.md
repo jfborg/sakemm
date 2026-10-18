@@ -3,6 +3,55 @@
 Log of choices made when two reasonable approaches existed, per the standing rule to pick the
 simpler one and note the alternative here.
 
+## Web deployment (owner-requested, between Phase 3 and Phase 4)
+
+The owner asked for the app to also be a full interactive webapp on Vercel: compose, claim,
+shelf, and open all working in a browser, not just the read-only countdown/claim-code page
+the brief originally scoped for web. This resolves brief section 12, question 4 ("should
+opening require the app, or may text-only letters open on the web page") in favor of the
+web page. See `WEBAPP_DEPLOY.md` for what this is and how to actually deploy it; the notes
+below are why it's built the way it is.
+
+**Nothing native was removed or reworked to make this possible.** The Expo web output IS the
+same Expo Router app already built for Phase 0 through 3 (`npm run web` locally is the same
+command this now ships to Vercel), so this was additive: a `vercel.json`, a responsive
+max-width pass on the screens that would otherwise stretch edge to edge on a desktop browser,
+and a link from the crawler-facing landing page into the full app. iOS and Android stay exactly
+as built; nothing about them changed.
+
+**This sandbox cannot deploy to Vercel itself, with or without a token.** Checked directly:
+the egress proxy returns a flat 403 on any connection to `vercel.com` or `api.vercel.com`,
+the same policy that already blocked Docker Hub (Phase 0) and the Deno installer (Phase 1).
+A token would not change a network-level block. The standard alternative doesn't need one
+anyway: connecting the GitHub repo in Vercel's own dashboard deploys straight from GitHub on
+every push, with no token ever shared with this session, and the owner offered GoDaddy access
+for the same reason this avoids needing it: Vercel tells you the exact DNS records to add, and
+adding them is a couple of clicks in GoDaddy's own dashboard. `WEBAPP_DEPLOY.md` has the exact
+steps. If the owner would still rather hand over a Vercel API token for some reason, that's a
+different session's problem: this one provably cannot reach the API to use it.
+
+**Subdomain split, not one domain doing both jobs.** A purely static (or purely client-
+rendered) page cannot produce correct per-letter Open Graph tags, because unfurling crawlers
+never run JavaScript (this is exactly why Phase 3 replaced the static landing page with the
+server-rendered `link-page` Edge Function). The Vercel-hosted Expo web export is, by contrast,
+a pure client-rendered SPA (`expo export --platform web` emits one `index.html` for every
+route; confirmed by inspecting `dist/`), so it has the identical problem if a shared link
+pointed straight at it. Rather than solve that twice, the shared link
+(`constants/brand.json`'s `linkBaseUrl`, still the root domain's `/l/*`) keeps pointing at the
+Supabase `link-page` function, which still does the one job it has to do correctly: render
+right for a crawler. Its "Continue in browser" button is the bridge into the real app, at a
+separate `app.<domain>` subdomain (`webAppUrl` in `constants/brand.json`) that Vercel hosts.
+Both are placeholders until the domain exists; `link-page` reads the real value from a
+`WEB_APP_URL` environment variable at runtime instead of a hardcoded import, consistent with
+how it already reads `SUPABASE_URL`/`SUPABASE_ANON_KEY`.
+
+**The webapp needs a live Supabase project to be more than a shell**, same as every other
+screen since Phase 0: it will deploy and render fine with no `EXPO_PUBLIC_SUPABASE_URL`/
+`EXPO_PUBLIC_SUPABASE_ANON_KEY` set in Vercel's project settings, but every screen will show
+the same "could not sign in" / "not configured" states already verified throughout Phases 1
+through 3. That is still the single biggest open blocker across this whole project, now
+blocking one more thing.
+
 ## Phase 3
 
 **The static web landing page from Phase 2 was replaced with a server-rendered one.** A pure

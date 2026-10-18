@@ -3,5 +3,6 @@
   "displayName": "Sealed",
   "slug": "sealed-app",
   "scheme": "sealedapp",
-  "linkBaseUrl": "https://example-sealed-app.test/l"
+  "linkBaseUrl": "https://example-sealed-app.test/l",
+  "webAppUrl": "https://app.example-sealed-app.test"
 }

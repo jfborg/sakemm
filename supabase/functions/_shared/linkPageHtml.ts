@@ -23,6 +23,10 @@ export interface LinkPageInput {
   unlockAtIso: string;
   unlockAtLabel: string;
   ogImageUrl: string;
+  /** The full interactive webapp's own /l/<token> route. A verified universal/app link
+   * (brief section 10, Phase 3) skips this page entirely on a device with the app installed;
+   * this is the primary action for everyone else, ahead of the store buttons. */
+  continueInBrowserUrl: string;
 }
 
 export function buildFoundLinkPageHtml(input: LinkPageInput): string {
@@ -31,6 +35,7 @@ export function buildFoundLinkPageHtml(input: LinkPageInput): string {
   const from = escapeHtml(input.senderDisplayName);
   const code = escapeHtml(input.token);
   const ogImage = escapeHtml(input.ogImageUrl);
+  const continueUrl = escapeHtml(input.continueInBrowserUrl);
 
   return `<!doctype html>
 <html lang="en">
@@ -56,6 +61,7 @@ ${STYLE_BLOCK}
     <p class="countdown" id="countdown">Opens ${escapeHtml(input.unlockAtLabel)}</p>
     <p class="code-label">Claim code</p>
     <div class="code" id="code" title="Tap to copy">${code}</div>
+    <a class="continue-button" href="${continueUrl}">Continue in browser</a>
     <div class="stores">
       <a class="store-button" href="#" onclick="return false">App Store</a>
       <a class="store-button" href="#" onclick="return false">Google Play</a>
@@ -127,6 +133,7 @@ const STYLE_BLOCK = `<style>
   .code-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 20px 0 6px; }
   .code { font-family: 'SF Mono', Consolas, monospace; font-size: 15px; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 10px; word-break: break-all; cursor: pointer; }
   .code.copied::after { content: ' (copied)'; color: var(--accent); font-family: Georgia, serif; }
+  .continue-button { display: block; background: var(--accent); color: var(--paper); text-decoration: none; font-weight: bold; padding: 14px; border-radius: 10px; margin-top: 20px; }
   .stores { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
   .store-button { border: 1px solid var(--accent); color: var(--accent); text-decoration: none; padding: 10px 16px; border-radius: 10px; font-size: 13px; }
   .hint { font-size: 13px; color: var(--muted); margin-top: 20px; }

@@ -50,12 +50,19 @@ Deno.serve(async (req) => {
   const origin = new URL(req.url).origin;
   const ogImageUrl = `${origin}/functions/v1/og-image/${encodeURIComponent(token)}`;
 
+  // The Vercel-hosted webapp's own base URL (its /l/[token] route handles the rest). Set via
+  // the WEB_APP_URL secret once that's deployed; falls back to the same placeholder as
+  // constants/brand.json's webAppUrl until then, so the page still renders sensibly.
+  const webAppUrl = Deno.env.get('WEB_APP_URL') ?? 'https://app.example-sealed-app.test';
+  const continueInBrowserUrl = `${webAppUrl}/l/${encodeURIComponent(token)}`;
+
   const pageHtml = buildFoundLinkPageHtml({
     token,
     senderDisplayName: data.sender_display_name as string,
     unlockAtIso: unlockAt.toISOString(),
     unlockAtLabel,
     ogImageUrl,
+    continueInBrowserUrl,
   });
 
   return html(pageHtml, 200);

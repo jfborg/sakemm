@@ -9,9 +9,13 @@ pick and trade-mark-check the final name before launch.
 
 ## Status
 
-Phase 3 (push and links) is complete. See `PHASE_0_NOTES.md` through `PHASE_3_NOTES.md` for
-what shipped each phase, what was deferred, and what needs an owner decision. Visual direction
-A (classic stationery) is the one built; see `PHASE_2_NOTES.md`.
+Phase 3 (push and links) is complete, plus an owner-requested addition: the same app also
+deploys as a full interactive webapp on Vercel, not just the native iOS/Android app the brief
+originally scoped. See `WEBAPP_DEPLOY.md` for what that is and how to deploy it, and
+`DECISIONS.md`'s "Web deployment" section for why it's built the way it is. See
+`PHASE_0_NOTES.md` through `PHASE_3_NOTES.md` for what shipped each phase, what was deferred,
+and what needs an owner decision. Visual direction A (classic stationery) is the one built;
+see `PHASE_2_NOTES.md`.
 
 ## Stack
 
@@ -36,6 +40,8 @@ npm run ios       # requires macOS + Xcode
 npm run android   # requires Android Studio / an emulator
 ```
 
+`npm run web` is the same app `vercel.json` deploys to production; see `WEBAPP_DEPLOY.md`.
+
 ## Checks
 
 ```sh
@@ -57,8 +63,10 @@ lib/api.ts                typed calls into the seal/claim/open/burn/reply Edge F
                           the direct letters reads RLS already allows
 lib/supabase.ts           Supabase client, reads EXPO_PUBLIC_SUPABASE_URL/ANON_KEY
 lib/pushNotifications.ts  Expo push registration and notification-tap handling
-constants/brand.json      the BRAND constants (codename, display name, slug, scheme)
+constants/brand.json      the BRAND constants (codename, display name, slug, scheme,
+                          linkBaseUrl, webAppUrl)
 constants/stationery.ts   stationery catalog (one design so far: classic-cream)
+constants/layout.ts        shared max-width container for the webapp on wide viewports
 store/                    Zustand stores (auth session, compose draft)
 supabase/migrations/      SQL schema, RLS policies, and the seal/claim/open/burn/reply/
                           notification functions
@@ -70,6 +78,7 @@ web/                       .well-known/ universal-link verification files and do
                           web/README.md
 assets/                   app icons and, later, stationery, seals, sounds
 assets/licenses/           licence files for every non-original asset
+vercel.json                 build config for the webapp deploy target; see WEBAPP_DEPLOY.md
 ```
 
 ## Environment variables
