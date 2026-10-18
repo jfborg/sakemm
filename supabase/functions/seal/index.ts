@@ -54,6 +54,7 @@ Deno.serve(async (req) => {
     .single();
 
   if (error) {
+    console.error('seal_letter RPC failed', error);
     const mapped = mapDbErrorMessage(error.message);
     return json(mapped.body, mapped.status);
   }
