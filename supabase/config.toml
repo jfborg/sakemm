@@ -406,6 +406,7 @@ verify_jwt = false
 verify_jwt = false
 
 [remotes.main]
+# Production is synchronized from the GitHub main branch.
 project_id = "lxxczysiapnarwysjsie"
 
 # [edge_runtime.secrets]
