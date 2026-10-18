@@ -9,4 +9,5 @@ insert into storage.buckets (id, name, public)
 values ('letter-media', 'letter-media', false)
 on conflict (id) do nothing;
 
-alter table storage.objects enable row level security;
+-- Hosted Supabase projects already enforce RLS on storage.objects. The table is
+-- owned by the storage service, so application migrations must not alter it.
